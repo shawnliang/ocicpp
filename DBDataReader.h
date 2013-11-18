@@ -15,7 +15,7 @@ class DBDataReaderImp;
 class DBStatement;
 class DBColumnDefinition;
 class DBConnection;
-class DBValueString;
+class DBValue;
 
 class DBDataReader
 {
@@ -24,11 +24,7 @@ public:
     ~DBDataReader();
 
     bool hasNext();
-
-    bool isNull(const char* columnName);
-    bool isNull(int col);
-
-    const DBValueString& get(int col) const;
+    const DBValue& get(int col) const;
 
 private:
     DBDataReaderImp* imp;

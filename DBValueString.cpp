@@ -1,6 +1,7 @@
 #include <string.h>
 #include <string>
 #include "DBValueString.h"
+#include "OCIException.h"
 
 namespace prophetstor
 {
@@ -26,6 +27,11 @@ int DBValueString::getBufferSize() const
 std::string DBValueString::getString() const
 {
     return buffer_;
+}
+
+long DBValueString::getLong() const
+{
+    throw OCIException("DBValueString::getLong() not implemented", -1);
 }
 
 DBValueString::~DBValueString()

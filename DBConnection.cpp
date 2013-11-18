@@ -20,7 +20,7 @@ private:
 
 public:
     DBConnectionImp(const std::string& user, const std::string& password, const std::string& connectionString)
-        :user_(user), password_(password), connectionString_(connectionString)
+        : user_(user), password_(password), connectionString_(connectionString)
     {
         sword ret = 0;
 

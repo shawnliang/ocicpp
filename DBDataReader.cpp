@@ -6,6 +6,7 @@
 #include "DBConnection.h"
 #include "DBColumnDefinition.h"
 #include "DBValueString.h"
+#include "DBValueNum.h"
 
 namespace prophetstor
 {
@@ -23,17 +24,42 @@ public:
         {
             DBColumnDefinition& col = columns_->at(i);
 
-            DBValueString* cell = new DBValueString((int)col.getWidth()+1);
+//            SQLT_DATE
+//            SQLT_TIMESTAMP
+//            SQLT_TIMESTAMP_TZ
+//            SQLT_TIMESTAMP_LTZ
+//            SQLT_INTERVAL_YM
+//            SQLT_INTERVAL_DS
+//            SQLT_CLOB
+//            SQLT_BLOB
+//            SQLT_INT
+//            SQLT_UIN
+//            SQLT_FLT
+//            SQLT_PDN
+//            SQLT_BIN
+//            SQLT_NTY
+//            SQLT_REF
+//            SQLT_VST
+//            SQLT_VNU
 
-            //if (col.isText())
-                cells_.push_back(cell);
-            //else
-            //    throw OCIException("not implemented", -1);
+            DBValue* cell = NULL;
 
+            switch(col.getDataType())
+            {
+            case SQLT_CHR:
+                cell = new DBValueString(col.getWidth()+1);
+                break;
+            case SQLT_NUM:
+                cell = new DBValueNum();
+                break;
+            default:
+                throw OCIException("Not implemented for this data type", col.getDataType());
+            }
 
+            cells_.push_back(cell);
             OCIDefine* def = NULL;
 
-            sword ret = OCIDefineByPos(stmt_.getHandle(), &def, connection_.getErrHandle(), i+1, cell->getBuffer(), cell->getBufferSize(), SQLT_STR, NULL, NULL, NULL, OCI_DEFAULT);
+            sword ret = OCIDefineByPos(stmt_.getHandle(), &def, connection_.getErrHandle(), i+1, cell->getBuffer(), cell->getBufferSize(), (ub2)cell->getSQLType(), NULL, NULL, NULL, OCI_DEFAULT);
             if (ret != OCI_SUCCESS)
                 throw OCIException("OCIDefineByPos error", ret, connection_.getErrHandle());
 
@@ -69,7 +95,7 @@ public:
         }
     }
 
-    const DBValueString& get(int col) const
+    const DBValue& get(int col) const
     {
         if (!rowFetched)
             throw std::domain_error("no row is avaliable or not fetched yet");
@@ -89,7 +115,7 @@ private:
     bool rowFetched;
 
     std::vector<DBColumnDefinition>* columns_;
-    std::vector<DBValueString*> cells_;
+    std::vector<DBValue*> cells_;
     std::vector<OCIDefine*> defines_;
 };
 
@@ -110,7 +136,7 @@ bool DBDataReader::hasNext()
     return imp->hasNext();
 }
 
-const DBValueString& DBDataReader::get(int col) const
+const DBValue& DBDataReader::get(int col) const
 {
     return imp->get(col);
 }

@@ -228,7 +228,7 @@ int main(int argc, char** argv)
     ret = OCIDefineByPos(stmt, &def, err, 1,  val1, sizeof(val1[0]), SQLT_STR, NULL, NULL, NULL, OCI_DEFAULT);
     if (ret != OCI_SUCCESS)
     {
-        std::cout << "OCIDefineByPos 1: " << ret << std::endl;
+        std::cout << "OCIDefineByPos 1: " << ret << std::endl;d
         goto go_exit;
     }
 

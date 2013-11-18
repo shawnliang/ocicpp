@@ -2,6 +2,7 @@
 #define PROPHETSTOR_OCI_WRAPPER_DBCONN_H_
 
 #include "oci.h"
+#include "stdint.h"
 
 namespace prophetstor
 {
